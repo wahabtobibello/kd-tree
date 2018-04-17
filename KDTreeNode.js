@@ -1,10 +1,11 @@
 class KDTreeNode {
-  constructor(data, axis, isRoot) {
+  constructor(data, depth) {
     this.data = data;
-    this.isRoot = isRoot;
     this.left = null;
     this.right = null;
-    this.axis = axis;
+    this.isRoot = depth == 0;
+    this.axis = depth % dimensions.length;
+    this.depth = depth;
   }
 }
 module.exports = KDTreeNode;
