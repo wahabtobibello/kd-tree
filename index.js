@@ -25,8 +25,8 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
 
             median = Math.floor(points.length / 2);
             node = createKDTreeNode(points[median], currentAxisIndex, depth, parent);
-            node.setLeft(buildTree(points.slice(0, median), depth + 1, node));
-            node.setRight(buildTree(points.slice(median + 1), depth + 1, node));
+            node.left = buildTree(points.slice(0, median), depth + 1, node);
+            node.right = buildTree(points.slice(median + 1), depth + 1, node);
 
             return node;
         }
@@ -47,10 +47,10 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                         return parent;
                     }
                     var axis = _axes[node.getAxisIndex()];
-                    if (point[axis] < node.getPoint()[axis]) {
-                        return getInsertPosition(node.getLeft(), node);
+                    if (point[axis] < node.point[axis]) {
+                        return getInsertPosition(node.left, node);
                     } else {
-                        return getInsertPosition(node.getRight(), node);
+                        return getInsertPosition(node.right, node);
                     }
 
                 }
@@ -66,10 +66,10 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                 newNode = createKDTreeNode(point, (insertPosition.getAxisIndex() + 1) % _dimension, insertPosition.getDepth() + 1, insertPosition);
                 axis = _axes[insertPosition.getAxisIndex()];
 
-                if (point[axis] < insertPosition.getPoint()[axis]) {
-                    insertPosition.setLeft(newNode);
+                if (point[axis] < insertPosition.point[axis]) {
+                    insertPosition.left = newNode;
                 } else {
-                    insertPosition.setRight(newNode);
+                    insertPosition.right = newNode;
                 }
             }
 
@@ -81,7 +81,7 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                         return null;
                     }
 
-                    if (node.getPoint() === point) {
+                    if (node.point === point) {
                         return node;
                     }
 
@@ -205,20 +205,20 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                     let nextBranch = null,
                         oppositeBranch = null;
 
-                    if (point[axis] < node.getPoint()[axis]) {
-                        nextBranch = node.getLeft();
-                        oppositeBranch = node.getRight();
+                    if (point[axis] < node.point[axis]) {
+                        nextBranch = node.left;
+                        oppositeBranch = node.right;
                     } else {
-                        oppositeBranch = node.getLeft();
-                        nextBranch = node.getRight();
+                        oppositeBranch = node.left;
+                        nextBranch = node.right;
                     }
 
                     let best = closerDistance(point,
                         findClosestTo(nextBranch,
                             depth + 1),
-                        node.getPoint());
+                        node.point);
 
-                    if (_metric(point, best) > Math.abs(point[axis] - node.getPoint()[axis])) {
+                    if (_metric(point, best) > Math.abs(point[axis] - node.point[axis])) {
                         best = closerDistance(point,
                             findClosestTo(oppositeBranch,
                                 depth + 1),
