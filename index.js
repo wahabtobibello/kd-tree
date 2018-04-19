@@ -81,7 +81,9 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                         return null;
                     }
 
-                    if (node.point === point) {
+                    if ((_axes.reduce((acc, curr) => {
+                        return acc && node.point[curr] === point[curr]
+                    }, true))) {
                         return node;
                     }
 
