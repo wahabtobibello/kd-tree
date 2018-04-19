@@ -177,8 +177,39 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                 removeNode(node);
             }
 
-            searchRange() {
+            searchRange(pointA, pointB) {
+                let result = [];
+                let count = 0;
+                let minValuesByAxis = _axes.reduce((acc, curr) => ({
+                    ...acc,
+                    [curr]: Math.min(pointA[curr], pointB[curr])
+                }), {});
+                let maxValuesByAxis = _axes.reduce((acc, curr) => ({
+                    ...acc,
+                    [curr]: Math.max(pointA[curr], pointB[curr])
+                }), {});
 
+                (function findResult(node) {
+                    if (node == null) {
+                        return;
+                    }
+
+                    let axis = _axes[node.getAxisIndex()];
+
+                    if (_axes.reduce((acc, curr) => (acc && node.point[curr] >= minValuesByAxis[curr]
+                        && node.point[curr] <= maxValuesByAxis[curr]), true)) {
+                        result.push(node.point);
+                    }
+
+                    if (node.point[axis] >= minValuesByAxis[axis]) {
+                        findResult(node.left);
+                    }
+                    if (node.point[axis] <= maxValuesByAxis[axis]) {
+                        findResult(node.right);
+                    }
+                })(this.root);
+
+                return result;
             }
 
             closestTo(point) {
