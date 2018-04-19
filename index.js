@@ -5,6 +5,7 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
         let _axes = null;
         let _dimension = null;
         let _metric = null;
+        let _points = null;
 
         const buildTree = (points, depth = 0, parent = null) => {
 
@@ -34,10 +35,11 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
         return class KDTree {
 
             constructor(points, axes, metric) {
-                _axes = axes;
+                _points = [...points];
+                _axes = [...axes];
                 _dimension = axes.length;
                 _metric = metric;
-                this.root = buildTree([...points]);
+                this.root = buildTree(_points);
             }
 
             add(point) {
@@ -71,6 +73,7 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                 } else {
                     insertPosition.right = newNode;
                 }
+                _points = [..._points, point];
             }
 
             remove(point) {
@@ -177,6 +180,8 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                 if (node === null) return;
 
                 removeNode(node);
+
+                _points = _points.filter((value) => value !== node.point);
             }
 
             searchRange(pointA, pointB) {
