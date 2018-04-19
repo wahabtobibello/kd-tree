@@ -42,6 +42,10 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                 this.root = buildTree(_points);
             }
 
+            rebuildTree() {
+                this.root = buildTree(_points);
+            }
+
             add(point) {
                 const getInsertPosition = (node, parent) => {
 
