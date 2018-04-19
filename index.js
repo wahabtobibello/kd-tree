@@ -37,7 +37,7 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                 _axes = axes;
                 _dimension = axes.length;
                 _metric = metric;
-                this.root = buildTree(points);
+                this.root = buildTree([...points]);
             }
 
             add(point) {
