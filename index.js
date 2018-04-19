@@ -189,7 +189,6 @@ module.exports = function createKDTree(point, axisIndex, depth, parent) {
                 _points = _points.filter((value) => value !== node.point);
             }
 
-
             removeAndRebuildTree(point) {
                 _points = _points.filter((value) => value !== node.point);
                 this.root = buildTree(_points);
